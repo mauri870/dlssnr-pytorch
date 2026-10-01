@@ -1,0 +1,57 @@
+[project]
+name = "dlssnr-pytorch"
+version = "0.1.0"
+description = "NVIDIA DLSS 5 neural rendering network in PyTorch, with weights extracted from NVIDIA's own library"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+dependencies = ["numpy", "pillow", "safetensors"]
+
+# Pick the PyTorch build for your hardware with one extra:
+#   uv sync --extra rocm   Radeon RX 7000/9000, Instinct (ROCm 7.2 wheels)
+#   uv sync --extra cuda   NVIDIA GPUs (CUDA 13.0 wheels)
+#   uv sync --extra cpu    no GPU
+# The device is chosen at run time (`--device auto`): ROCm builds report themselves as "cuda" too.
+[project.optional-dependencies]
+rocm = ["torch"]
+cuda = ["torch"]
+cpu = ["torch"]
+
+[tool.uv]
+conflicts = [[{ extra = "rocm" }, { extra = "cuda" }, { extra = "cpu" }]]
+
+[dependency-groups]
+dev = ["pytest"]
+
+[project.scripts]
+dlssnr = "dlssnr.cli:main"
+
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-rocm", extra = "rocm" },
+    { index = "pytorch-cuda", extra = "cuda" },
+    { index = "pytorch-cpu", extra = "cpu" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-rocm"
+url = "https://download.pytorch.org/whl/rocm7.2"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cuda"
+url = "https://download.pytorch.org/whl/cu130"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["dlssnr", "dlssnr.layers"]

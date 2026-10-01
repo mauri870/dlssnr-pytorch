@@ -1,0 +1,13 @@
+# Environments and caches
+.venv*/
+__pycache__/
+*.egg-info/
+
+# NVIDIA's files and anything extracted from them are never committed
+*.dll
+*.safetensors
+*.pt
+*.bin
+nvngx*
+streamline*
+out/
