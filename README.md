@@ -10,6 +10,10 @@ dlssnr run frame.png -o enhanced.png --side-by-side
 dlssnr verify --input frame.png --reference nvidia_output.png
 ```
 
+[![The input frame on the left and the network's output on the right](docs/steep-comparison-preview.jpg)](docs/steep-comparison.jpg)
+
+A frame from Steep (input on the left, this network's output with the default controls on the right); click for the full-size image. Steep is a trademark and the game's art is the property of Ubisoft; the screenshot is shown only to illustrate the network's output and is not covered by this project's license.
+
 ## Results
 
 The same Tomb Raider (2013) frame at three sizes, fed to this network and to NVIDIA's library with the
