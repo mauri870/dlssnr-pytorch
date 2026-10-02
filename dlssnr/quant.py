@@ -10,6 +10,12 @@ import torch
 
 E4M3_MAX = 448.0
 
+# Experiment hook: the blocks in ``skip_blocks`` keep their values at float16 instead of rounding them to e4m3 (the
+# network was calibrated with the rounding, so this changes the picture). ``current_block`` is set by NRNet.run.
+# The compiled and Triton paths bake the rounding in: set DLSS5_COMPILE=0 and DLSS5_TRITON=0 when using it.
+skip_blocks: set[int] = set()
+current_block = -1
+
 
 def q8(x: torch.Tensor) -> torch.Tensor:
     """Round to the nearest e4m3 value, saturating at +-448; NaN is not preserved.
@@ -18,6 +24,8 @@ def q8(x: torch.Tensor) -> torch.Tensor:
     e4m3 subnormals). Returns float32.
     """
     x = x.to(torch.float32).clamp(-E4M3_MAX, E4M3_MAX)
+    if skip_blocks and current_block in skip_blocks:
+        return x.to(torch.float16).to(torch.float32)
     return x.to(torch.float8_e4m3fn).to(torch.float32)
 
 

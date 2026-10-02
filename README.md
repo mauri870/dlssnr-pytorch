@@ -28,6 +28,11 @@ NVIDIA's output, for scale. The CPU column and the metrics were measured with th
 | 2560x1440 | 48.26 dB | 0.9968 | 0.9956 | 27.72 dB | 40 s | 0.33 s |
 | 3840x2160 | 49.10 dB | 0.9970 | 0.9955 | 28.69 dB | 90 s | 0.77 s |
 
+The timings are not a focus of this project and do not represent what a GPU can do with this network. This is a
+reference implementation in PyTorch, written to reproduce NVIDIA's output, not to be fast. A dedicated Vulkan port,
+[DLSSNR-RDNA3](https://github.com/mauri870/DLSSNR-RDNA3), runs the same network at 4K in 59 ms on the same
+7900 XTX.
+
 "Edit correlation" measures how closely this network's changes match NVIDIA's. NVIDIA's output is identical across runs, so the remaining differences come from arithmetic: the network rounds to 8-bit floating point after most operations, and summation order can shift values near rounding boundaries. Against an independent implementation, it matches 97–100% of each layer's output exactly and is within one 8-bit step on nearly all other elements; the widest Swin layers and pre-block have the lowest exact-match rates.
 
 ## Setup

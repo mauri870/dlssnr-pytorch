@@ -20,7 +20,7 @@ import numpy as np
 import torch
 from torch import nn
 
-from . import int8
+from . import int8, quant
 from .plan import LayerSpec, build_plan, padding
 from .runtime import clear_caches
 from .weights import Weights
@@ -128,6 +128,7 @@ class NRNet(nn.Module):
                 layer.controls = controls
             i = spec.index
             int8.current = spec.block
+            quant.current_block = spec.block
             skip = self.skip_source[i]
             skip_value = None if skip is None else outputs[skip]
             previous = outputs[i - 1] if i else None
